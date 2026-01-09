@@ -1,0 +1,11 @@
+[Unit]
+Description=Shuffle and set random wallpaper
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/wallpaper.py
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target

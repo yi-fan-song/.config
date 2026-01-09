@@ -1,0 +1,9 @@
+[Unit]
+Description=Shuffle through wallpapers
+
+[Timer]
+OnStartupSec=1
+OnUnitActiveSec=5min
+
+[Install]
+WantedBy=timers.target
