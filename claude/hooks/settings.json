@@ -3,7 +3,12 @@
     "PreToolUse": [
       {
         "matcher": "Edit|Write",
-        "command": ".claude/hooks/enforce-worktree.sh"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/enforce-worktree.sh"
+          }
+        ]
       }
     ]
   }
