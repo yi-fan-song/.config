@@ -6,11 +6,12 @@ Config files for [Claude Code](https://claude.ai/code).
 
 ```
 claude/
-├── statusline.sh          # Status line: name, cwd, model, worktree, context%, rate limits
-├── settings.json          # Global settings patch (statusLine config)
-├── link.sh                # Install script
+├── statusline.sh            # Status line: name, cwd, model, worktree, context%, rate limits
+├── settings.json            # Global settings patch (statusLine config)
+├── link.sh                  # Install script
 ├── hooks/
 │   ├── enforce-worktree.sh  # PreToolUse hook: blocks edits to protected directories
+│   ├── protect-branches.sh  # PreToolUse hook: blocks git commands on protected branches
 │   └── settings.json        # Workspace settings patch (hooks config)
 └── README.md
 ```
@@ -51,6 +52,29 @@ You can also set the `ENFORCE_WORKTREE_DIRS` env var as an alternative (colon-se
 
 ```bash
 export ENFORCE_WORKTREE_DIRS="/Users/me/repo/mobile:/Users/me/repo/web"
+```
+
+### Branch protection hooks (per workspace)
+
+Installed automatically alongside worktree enforcement via `./link.sh --hooks`.
+
+On protected branches, Claude is blocked from running git commands that could mutate state. Allowed: `fetch`, `pull`, `worktree`, and read-only inspection (`status`, `diff`, `log`, `show`, `blame`, `branch`, `tag`, `remote`, `config`, `rev-parse`, `describe`, `reflog`, `grep`, `ls-files`/`ls-tree`/`ls-remote`, `cat-file`, `shortlog`, `whatchanged`, `name-rev`, `for-each-ref`, `help`, `version`). This prevents accidental commits, pushes, or resets on branches like `main`.
+
+Configure protected branches by editing `.protected-branches` in the workspace root:
+
+```
+# One branch name per line. Lines starting with # are ignored.
+main
+master
+production
+```
+
+If the file is absent or empty, defaults to `main` and `master`.
+
+You can also set the `PROTECTED_BRANCHES` env var as an alternative (colon-separated names):
+
+```bash
+export PROTECTED_BRANCHES="main:master:production"
 ```
 
 Requires `jq`.

@@ -50,6 +50,7 @@ install_hooks() {
     mkdir -p "$hooks_dir"
 
     link_file "$SCRIPT_DIR/hooks/enforce-worktree.sh" "$hooks_dir/enforce-worktree.sh"
+    link_file "$SCRIPT_DIR/hooks/protect-branches.sh" "$hooks_dir/protect-branches.sh"
     merge_settings "$target_dir/settings.json" "$SCRIPT_DIR/hooks/settings.json"
 
     # Create default config if missing
@@ -63,6 +64,21 @@ EOF
         echo "CREATE $config (add protected paths here)"
     else
         echo "EXISTS $config"
+    fi
+
+    local branch_config="$workspace/.protected-branches"
+    if [[ ! -f "$branch_config" ]]; then
+        cat > "$branch_config" <<'EOF'
+# Branches where git commands are restricted (one per line).
+# Only fetch/pull/worktree and read-only inspection commands are allowed.
+# Lines starting with # are ignored.
+# If this file is empty/absent, defaults to: main, master
+main
+master
+EOF
+        echo "CREATE $branch_config (edit protected branches here)"
+    else
+        echo "EXISTS $branch_config"
     fi
 }
 
