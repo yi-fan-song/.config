@@ -5,7 +5,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 usage() {
     echo "Usage:"
-    echo "  ./link.sh              Install statusline into ~/.claude/"
+    echo "  ./link.sh              Install statusline + branch protection into ~/.claude/"
     echo "  ./link.sh --hooks DIR  Install worktree enforcement hooks into DIR/.claude/"
     exit 1
 }
@@ -38,6 +38,7 @@ install_statusline() {
     mkdir -p "$target_dir"
 
     link_file "$SCRIPT_DIR/statusline.sh" "$target_dir/statusline.sh"
+    link_file "$SCRIPT_DIR/protected-repos" "$target_dir/protected-repos"
     merge_settings "$target_dir/settings.json" "$SCRIPT_DIR/settings.json"
 }
 
@@ -50,7 +51,6 @@ install_hooks() {
     mkdir -p "$hooks_dir"
 
     link_file "$SCRIPT_DIR/hooks/enforce-worktree.sh" "$hooks_dir/enforce-worktree.sh"
-    link_file "$SCRIPT_DIR/hooks/protect-branches.sh" "$hooks_dir/protect-branches.sh"
     merge_settings "$target_dir/settings.json" "$SCRIPT_DIR/hooks/settings.json"
 
     # Create default config if missing
@@ -66,20 +66,7 @@ EOF
         echo "EXISTS $config"
     fi
 
-    local branch_config="$workspace/.protected-branches"
-    if [[ ! -f "$branch_config" ]]; then
-        cat > "$branch_config" <<'EOF'
-# Branches where git commands are restricted (one per line).
-# Only fetch/pull/worktree and read-only inspection commands are allowed.
-# Lines starting with # are ignored.
-# If this file is empty/absent, defaults to: main, master
-main
-master
-EOF
-        echo "CREATE $branch_config (edit protected branches here)"
-    else
-        echo "EXISTS $branch_config"
-    fi
+    # Branch protection is global (see ./link.sh + protected-repos), not per-workspace.
 }
 
 # --- Main ---

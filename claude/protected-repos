@@ -1,0 +1,35 @@
+# Which repos the branch-protection hook guards, and on which branches.
+#
+# Blank lines and #-comments are ignored. The LAST matching rule wins, so a broad
+# rule can be followed by a narrow one that overrides it.
+#
+#   default: main,master        fallback branch set for repos with no rule of their own
+#   <pattern>                   protect, using the default branch set
+#   <pattern>:main,production   protect, using this branch set instead
+#   !<pattern>                  do not protect at all
+#
+# Patterns: `~` expands to $HOME. `*` is a glob and DOES span `/`, so `~/x/*`
+# covers nested repos too. A pattern naming a directory also covers every repo
+# beneath it (`!~/scratch` == `!~/scratch/*`). A pattern with no `/` matches the
+# repo's directory name anywhere on disk (`!sandbox`).
+#
+# Worktrees: every rule is tested against the checkout path AND the repo it was
+# created from, so a rule naming a repo covers all of its worktrees no matter
+# where they live. To treat one worktree differently, name its path in a rule
+# placed *after* the repo's own rule.
+#
+# Per-repo escape hatches, highest precedence first:
+#   PROTECTED_BRANCHES=main:master    env var, colon-separated
+#   <repo root>/.protected-branches   file, one branch per line
+#   PROTECTED_REPOS="!~/tmp;~/repo"   env var, replaces this whole file
+
+default: main,master
+
+# Protect nothing by default -- only the repos re-added below.
+!/*
+
+# Pivot's deploy repos, on their long-lived integration branches. Each rule also
+# covers that repo's worktrees: ~/repo/{web,mobile}-branches/* and the
+# agent worktrees under <repo>/.claude/worktrees/*.
+~/repo/web:main,uat,development,production
+~/repo/mobile:main,uat,development,production
