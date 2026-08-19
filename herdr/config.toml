@@ -1,0 +1,15 @@
+[ui]
+agent_panel_sort = "priority"
+
+[theme]
+name = "terminal"
+auto_switch = false
+
+# --- added by ez-corp.space-usage (removed by `status-disable`) ---
+[ui.sidebar.spaces]
+rows = [
+  ["state_icon", "workspace"],
+  ["branch", "git_status"],
+  ["$usage"],
+]
+# --- end ez-corp.space-usage ---

@@ -1,0 +1,5 @@
+# herdr plugins, one OWNER/REPO per line. Installed by ./link.sh.
+# Each is compiled from source at install time, so `cargo` must be on PATH.
+# Lines starting with # are ignored.
+
+ezcorp-org/herdr-pc-ram-and-cpu-usage-overlay
