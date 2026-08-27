@@ -4,9 +4,8 @@
 local launch = {"ctrl", "alt"}
 
 -- ── Terminal ──────────────────────────────────────────────────────────────────
--- `--single-instance` puts each new window in the running kitty, so repeated
--- presses share one process. Launched via `open` so launchd owns it rather
--- than Hammerspoon, and so the call returns instead of blocking.
+-- Focus the running kitty rather than spawning one, so there is only ever a
+-- single Dock icon. New terminals come from herdr's own `prefix+c`.
 hs.hotkey.bind(launch, "return", function()
-    hs.execute("open -na kitty --args --single-instance")
+    hs.application.launchOrFocus("kitty")
 end)
