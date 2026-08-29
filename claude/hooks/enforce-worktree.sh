@@ -4,7 +4,8 @@
 # Claude must use a worktree instead of editing these folders directly.
 #
 # Configuration: set ENFORCE_WORKTREE_DIRS as a colon-separated list of
-# absolute paths to protect. Defaults below match the Pivot repo layout.
+# absolute paths to protect. With neither this nor the file below set, the
+# hook protects nothing and every edit passes through.
 #
 #   export ENFORCE_WORKTREE_DIRS="/Users/me/repo/mobile:/Users/me/repo/web"
 #

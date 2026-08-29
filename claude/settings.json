@@ -10,7 +10,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/config/claude/hooks/protect-branches.sh"
+            "command": "$HOME/.claude/hooks/protect-branches.sh"
           }
         ]
       }
@@ -20,7 +20,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/config/claude/hooks/log-timestamp.sh"
+            "command": "$HOME/.claude/hooks/log-timestamp.sh"
           }
         ]
       }
@@ -30,7 +30,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/config/claude/hooks/log-timestamp.sh"
+            "command": "$HOME/.claude/hooks/log-timestamp.sh"
           }
         ]
       }

@@ -28,8 +28,8 @@ default: main,master
 # Protect nothing by default -- only the repos re-added below.
 !/*
 
-# Pivot's deploy repos, on their long-lived integration branches. Each rule also
+# Example: deploy repos on their long-lived integration branches. Each rule also
 # covers that repo's worktrees: ~/repo/{web,mobile}-branches/* and the
 # agent worktrees under <repo>/.claude/worktrees/*.
-~/repo/web:main,uat,development,production
-~/repo/mobile:main,uat,development,production
+~/repo/web:main,staging,development,production
+~/repo/mobile:main,staging,development,production

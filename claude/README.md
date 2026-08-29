@@ -8,7 +8,8 @@ Config files for [Claude Code](https://claude.ai/code).
 claude/
 ├── statusline.sh            # Status line: name, cwd, model, worktree, context%, rate limits
 ├── settings.json            # Global settings patch (statusLine + branch protection)
-├── protected-repos          # Which repos branch protection guards (global config)
+├── protected-repos.example  # Template for the above; tracked
+├── protected-repos          # Which repos branch protection guards (gitignored, machine-specific)
 ├── link.sh                  # Install script
 ├── hooks/
 │   ├── enforce-worktree.sh  # PreToolUse hook: blocks edits to protected directories
@@ -25,7 +26,9 @@ claude/
 ./link.sh
 ```
 
-Symlinks `statusline.sh` and `protected-repos` into `~/.claude/`, and merges the statusLine config plus the branch-protection hook registration into `~/.claude/settings.json`.
+Symlinks `statusline.sh`, `protected-repos`, and the global hooks into `~/.claude/`, and merges the statusLine config plus the hook registrations into `~/.claude/settings.json`.
+
+`protected-repos` holds machine-specific paths, so it is **gitignored**. On first run `link.sh` seeds it from the tracked `protected-repos.example`; after that the file is yours to edit and re-runs leave it alone. Edit it at either path — `~/.claude/protected-repos` is a symlink to the repo copy.
 
 ### Worktree enforcement hooks (per workspace)
 
@@ -72,7 +75,7 @@ The hook resolves which repo a command actually targets, so `cd sub && git ...` 
 ```
 default: main,master                          # fallback branch set
 
-~/repo/web:main,uat,development,production    # different branch set
+~/repo/web:main,staging,development,production    # different branch set
 !~/scratch                                    # not protected at all
 !sandbox                                      # no slash => matches repo dir name
 ```
@@ -89,15 +92,15 @@ Patterns expand `~`, and `*` globs across `/` — so `~/x/*` covers nested repos
 
 #### Worktrees
 
-Every rule is tested against both the checkout path **and** the repo it was created from, so **a rule naming a repo covers all of its worktrees** regardless of where they live — `~/repo/web` covers `~/repo/web-branches/*` and `~/repo/web/.claude/worktrees/*` alike. This matters: worktrees like `web-branches/uat` sit permanently on a protected branch.
+Every rule is tested against both the checkout path **and** the repo it was created from, so **a rule naming a repo covers all of its worktrees** regardless of where they live — `~/repo/web` covers `~/repo/web-branches/*` and `~/repo/web/.claude/worktrees/*` alike. This matters: worktrees like `web-branches/staging` sit permanently on a protected branch.
 
 Both paths are checked in a single pass rather than falling back to the origin repo only when nothing matched. Otherwise a catch-all `!/*` would match a worktree's own path and short-circuit its repo's rule, leaving every worktree unprotected.
 
 To treat one worktree differently, name its path in a rule placed *after* the repo's rule:
 
 ```
-~/repo/web:main,uat
-!~/repo/web-branches/uat    # ...but let me work in this one
+~/repo/web:main,staging
+!~/repo/web-branches/staging    # ...but let me work in this one
 ```
 
 #### Which branches
@@ -110,7 +113,7 @@ First hit wins:
 4. the `default:` line in `protected-repos`
 5. `main`, `master`
 
-The current branch is read with `git symbolic-ref HEAD`, not `rev-parse --abbrev-ref HEAD`. The latter returns the shortest *unambiguous* name, so a repo carrying both a `uat` branch and a `uat` tag (as `web` does) reports `heads/uat` and would never match a protected branch name. A detached HEAD has no branch and is never blocked.
+The current branch is read with `git symbolic-ref HEAD`, not `rev-parse --abbrev-ref HEAD`. The latter returns the shortest *unambiguous* name, so a repo carrying both a `staging` branch and a `staging` tag reports `heads/staging` and would never match a protected branch name. A detached HEAD has no branch and is never blocked.
 
 `PROTECTED_REPOS` replaces the `protected-repos` file entirely; entries are separated by `;` or newlines:
 

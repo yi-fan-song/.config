@@ -20,6 +20,16 @@ link_file() {
     echo "LINK $(basename "$src") -> $dst"
 }
 
+seed_file() {
+    local example="$1" real="$2"
+    if [[ -e "$real" ]]; then
+        echo "EXISTS $(basename "$real") (left alone)"
+        return
+    fi
+    cp "$example" "$real"
+    echo "SEED  $(basename "$example") -> $real"
+}
+
 merge_settings() {
     local target="$1" patch="$2"
     if [[ -f "$target" ]]; then
@@ -35,10 +45,16 @@ merge_settings() {
 # --- Statusline (global) ---
 install_statusline() {
     local target_dir="$HOME/.claude"
-    mkdir -p "$target_dir"
+    mkdir -p "$target_dir/hooks"
 
     link_file "$SCRIPT_DIR/statusline.sh" "$target_dir/statusline.sh"
+
+    # protected-repos is machine-specific and gitignored; seed it from the
+    # tracked example on first run, then link the real file into place.
+    seed_file "$SCRIPT_DIR/protected-repos.example" "$SCRIPT_DIR/protected-repos"
     link_file "$SCRIPT_DIR/protected-repos" "$target_dir/protected-repos"
+    link_file "$SCRIPT_DIR/hooks/protect-branches.sh" "$target_dir/hooks/protect-branches.sh"
+    link_file "$SCRIPT_DIR/hooks/log-timestamp.sh" "$target_dir/hooks/log-timestamp.sh"
     merge_settings "$target_dir/settings.json" "$SCRIPT_DIR/settings.json"
 }
 

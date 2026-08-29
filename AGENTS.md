@@ -38,3 +38,6 @@ the repo. Check `--diff` before re-running it bare, since bare mode overwrites t
   to the live file.
 - Claude Code branch protection rules live in `claude/protected-repos`, not per-workspace. Every
   repo is protected by default; `!` prefix exempts.
+- That file is machine-specific and **gitignored**. `claude/link.sh` seeds it from the tracked
+  `claude/protected-repos.example` on first run and leaves it alone thereafter. Edit the example
+  only to change what a fresh machine starts with; edit the real file to change this machine.

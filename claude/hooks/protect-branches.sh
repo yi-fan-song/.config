@@ -239,9 +239,10 @@ if [ ${#protected_branches[@]} -eq 0 ]; then
 fi
 
 # `rev-parse --abbrev-ref HEAD` is wrong here: it returns the shortest
-# *unambiguous* name, so a repo carrying both a `uat` branch and a `uat` tag
-# reports `heads/uat` and never matches a protected name. symbolic-ref gives the
-# exact ref, and fails on a detached HEAD -- where there is no branch to protect.
+# *unambiguous* name, so a repo carrying both a `staging` branch and a `staging`
+# tag reports `heads/staging` and never matches a protected name. symbolic-ref
+# gives the exact ref, and fails on a detached HEAD -- where there is no branch
+# to protect.
 current_branch=$(git -C "$repo_root" symbolic-ref --quiet HEAD 2>/dev/null)
 current_branch="${current_branch#refs/heads/}"
 
