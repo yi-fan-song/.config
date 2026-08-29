@@ -1,0 +1,27 @@
+{
+    "name": "Everforest Dark Hard (kitty)",
+
+    "background": "#1E2326",
+    "foreground": "#D3C6AA",
+
+    "cursorColor": "#D3C6AA",
+    "selectionBackground": "#D3C6AA",
+
+    "black": "#475258",
+    "red": "#FF715E",
+    "green": "#A7C080",
+    "yellow": "#FFE44D",
+    "blue": "#7FBBB3",
+    "purple": "#D699B6",
+    "cyan": "#83C092",
+    "white": "#D3C6AA",
+
+    "brightBlack": "#56635F",
+    "brightRed": "#FF715E",
+    "brightGreen": "#A7C080",
+    "brightYellow": "#DBBC7F",
+    "brightBlue": "#7FBBB3",
+    "brightPurple": "#D699B6",
+    "brightCyan": "#83C092",
+    "brightWhite": "#D3C6AA"
+}
