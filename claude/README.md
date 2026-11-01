@@ -7,7 +7,7 @@ Config files for [Claude Code](https://claude.ai/code).
 ```
 claude/
 ├── statusline.sh            # Status line: name, cwd, model, worktree, context%, rate limits
-├── settings.json            # Global settings patch (statusLine + branch protection)
+├── settings.json            # Global settings patch (statusLine, hooks, no session links in commits/PRs)
 ├── protected-repos.example  # Template for the above; tracked
 ├── protected-repos          # Which repos branch protection guards (gitignored, machine-specific)
 ├── link.sh                  # Install script
