@@ -17,13 +17,14 @@ PACMAN_PACKAGES=(
     pipewire
     wireplumber
 
-    # hyprpm build dependencies
+    # hyprpm (split from the hyprland package) and its build dependencies
     cmake
     cpio
     pkg-config
     git
     gcc
     base-devel
+    hyprpm
 
     # herdr (plugins are compiled from source, so rust is required)
     herdr
