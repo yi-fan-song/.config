@@ -10,6 +10,7 @@ closed laptop or a dropped connection.
 herdr/
 ├── config.toml   # herdr config: UI, theme, sidebar rows
 ├── plugins       # Plugins to install, one OWNER/REPO per line
+├── claude-restore/  # Reopens each pane's Claude session after a reboot (see below)
 ├── link.sh       # Install / save / diff script
 └── README.md
 ```
@@ -132,6 +133,61 @@ herdr plugin log                                           # debug a plugin run
 
 `status-disable` removes the marked `$usage` block from `config.toml` and stops
 the sidebar readout; `status-enable` puts it back.
+
+## Claude session restore
+
+After a reboot herdr gives every pane a bare shell and never re-runs what was
+in it. `claude-restore/` brings the Claude Code session back: same pane, same
+folder, same conversation (`claude --resume <id>`).
+
+```
+claude-restore/
+├── claude-restore.sh    # Claude Code hook, macOS/Linux (needs jq)
+├── init.zsh             # sourced from ~/.zshrc
+├── claude-restore.ps1   # the same hook for Windows
+└── init.ps1             # dot-sourced from the PowerShell profile
+```
+
+- **Recording** — a `SessionStart` hook writes the session id, launch folder and
+  transcript path to one file per terminal, keyed by `HC_TERMINAL_ID`.
+- **Forgetting** — a `SessionEnd` hook deletes it when you quit Claude yourself
+  (`/exit`, ctrl+c, ctrl+d: reason `prompt_input_exit`). A killed Claude ends
+  with reason `other`, so a reboot, logout or core crash leaves the record.
+- **Restoring** — the next interactive shell in that terminal finds the record,
+  removes it and resumes the session (a session with no messages yet starts a
+  fresh `claude` instead). Starts are spread over up to 15s so 40 panes don't
+  launch at once; ctrl+c during the wait skips that pane.
+- `claude -p` runs are ignored. `HERDR_CLAUDE_RESTORE=off` disables it.
+- State: `~/.local/state/herdr-claude-restore/` (`%LOCALAPPDATA%\herdr-claude-restore\` on Windows).
+
+Not installed by `./link.sh`. On macOS/Linux, add to `~/.zshrc`:
+
+```zsh
+source "$HOME/config/herdr/claude-restore/init.zsh"
+```
+
+and to `~/.claude/settings.json`, under both `SessionStart` and `SessionEnd`:
+
+```json
+{ "hooks": [{ "type": "command",
+  "command": "$HOME/config/herdr/claude-restore/claude-restore.sh", "timeout": 10 }] }
+```
+
+On Windows, add as the last line of `$PROFILE`:
+
+```powershell
+. "$HOME\config\herdr\claude-restore\init.ps1"
+```
+
+and to `%USERPROFILE%\.claude\settings.json`, under both `SessionStart` and `SessionEnd`:
+
+```json
+{ "hooks": [{ "type": "command", "shell": "powershell",
+  "command": "& \"$HOME\\config\\herdr\\claude-restore\\claude-restore.ps1\"", "timeout": 10 }] }
+```
+
+The PowerShell scripts were tested with PowerShell 7 on Linux, not on a Windows
+machine.
 
 ## Notes
 
