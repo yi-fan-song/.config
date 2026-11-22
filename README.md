@@ -6,6 +6,7 @@ Config files.
 |---|---|
 | [`claude/`](claude/README.md) | Claude Code: statusline, branch protection, worktree hooks |
 | [`herdr/`](herdr/README.md) | [herdr](https://herdr.dev) terminal workspace manager + plugins |
+| `herdr-app/` | Herdr desktop app theme (copy into `~/.config/herdr-app/themes/`) |
 | `kitty/` | Kitty terminal |
 | `mac/hammerspoon/` | macOS window tiling |
 | `sway/` | Sway WM, swaybar, keybinds |

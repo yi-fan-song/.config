@@ -19,7 +19,7 @@ they resolve their own directory: `./kitty/link.sh`.
 | `zed/link.sh` | `$XDG_CONFIG_HOME/zed/themes` | SKIP and exit |
 | `mac/hammerspoon/link.sh` | `~/.hammerspoon` | SKIP that file, continue with the rest |
 
-`sway/`, `systemd/`, and `wofi/` have no `link.sh` — those files are placed by hand.
+`herdr-app/`, `sway/`, `systemd/`, and `wofi/` have no `link.sh` — those files are placed by hand.
 
 **herdr is the odd one out** — it *copies* instead of symlinking, because herdr and its plugins
 rewrite `config.toml` via temp-file rename, which would replace a symlink with a real file and

@@ -4,6 +4,7 @@ input=$(cat)
 # Parse fields
 session_name=$(echo "$input" | jq -r '.session_name // empty')
 cwd=$(echo "$input" | jq -r '.cwd // empty')
+command -v cygpath >/dev/null 2>&1 && [ -n "$cwd" ] && cwd=$(cygpath -u "$cwd")
 model=$(echo "$input" | jq -r '.model.display_name // "unknown"')
 worktree_branch=$(echo "$input" | jq -r '.worktree.branch // empty')
 percentage=$(echo "$input" | jq -r '.context_window.used_percentage // 0')

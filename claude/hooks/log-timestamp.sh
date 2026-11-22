@@ -8,6 +8,7 @@ event=$(printf '%s' "$input" | jq -r '.hook_event_name // "?"')
 session=$(printf '%s' "$input" | jq -r '.session_id // "?"')
 session="${session:0:8}"
 cwd=$(printf '%s' "$input" | jq -r '.cwd // ""')
+command -v cygpath >/dev/null 2>&1 && [ -n "$cwd" ] && cwd=$(cygpath -u "$cwd")
 
 cwd_short="${cwd/#$HOME\/repo\//}"
 cwd_short="${cwd_short/#$HOME\/repo/repo}"
